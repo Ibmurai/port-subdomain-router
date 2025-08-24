@@ -136,6 +136,41 @@ The application includes:
 - Connection timeouts to prevent DoS
 - No TLS termination (handled by Traefik)
 
+## CI/CD Pipeline
+
+This project uses GitHub Actions for continuous integration and deployment:
+
+### Workflows
+
+- **CI/CD Pipeline** (`.github/workflows/ci-cd.yml`): Main pipeline for builds, tests, and releases
+- **Test Matrix** (`.github/workflows/test-matrix.yml`): Cross-platform testing
+- **Dependencies** (`.github/workflows/dependencies.yml`): Automated dependency updates and security scanning
+
+### Triggers
+
+- **Push to master**: Runs tests and builds Docker image (no push to registry)
+- **Pull Requests**: Runs tests and builds Docker image for validation
+- **Release Published**: Builds and pushes to GitHub Container Registry (ghcr.io)
+
+### Container Registry
+
+Images are published to `ghcr.io/${{ github.repository }}` only on releases:
+
+```bash
+# Pull latest release
+docker pull ghcr.io/your-username/port-subdomain-router:latest
+
+# Pull specific version
+docker pull ghcr.io/your-username/port-subdomain-router:v1.0.0
+```
+
+### Security
+
+- Automated vulnerability scanning with Trivy
+- Dependency review on PRs
+- Weekly security scans
+- Automated dependency updates via Dependabot
+
 ## Development
 
 ### Prerequisites

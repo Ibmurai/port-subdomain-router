@@ -5,9 +5,14 @@ This script tests the port extraction and basic WebSocket functionality
 """
 
 import asyncio
-import websockets
 import sys
 import re
+
+try:
+    import websockets
+    WEBSOCKETS_AVAILABLE = True
+except ImportError:
+    WEBSOCKETS_AVAILABLE = False
 
 async def test_websocket_connection(host, port):
     """Test WebSocket connection to the proxy"""
@@ -16,21 +21,21 @@ async def test_websocket_connection(host, port):
     
     try:
         async with websockets.connect(uri) as websocket:
-            print("✓ WebSocket connection established")
+            print("PASS: WebSocket connection established")
             
             # Send a test message
             await websocket.send(b"test message")
-            print("✓ Test message sent")
+            print("PASS: Test message sent")
             
             # Wait for response (if any)
             try:
                 response = await asyncio.wait_for(websocket.recv(), timeout=2.0)
-                print(f"✓ Received response: {response}")
+                print(f"PASS: Received response: {response}")
             except asyncio.TimeoutError:
-                print("ℹ No response received (expected for proxy)")
+                print("INFO: No response received (expected for proxy)")
                 
     except Exception as e:
-        print(f"✗ Connection failed: {e}")
+        print(f"FAIL: Connection failed: {e}")
         return False
     
     return True
@@ -59,7 +64,7 @@ def test_port_extraction():
         else:
             extracted_port = None
             
-        status = "✓" if extracted_port == expected_port else "✗"
+        status = "PASS" if extracted_port == expected_port else "FAIL"
         print(f"  {status} {host} -> {extracted_port} (expected: {expected_port})")
 
 def main():
@@ -72,6 +77,9 @@ def main():
     
     # Test WebSocket connection if host and port provided
     if len(sys.argv) >= 3:
+        if not WEBSOCKETS_AVAILABLE:
+            print("WARNING: websockets module not available. Install with: pip install websockets")
+            return
         host = sys.argv[1]
         port = int(sys.argv[2])
         asyncio.run(test_websocket_connection(host, port))
@@ -80,6 +88,8 @@ def main():
         print("  python3 test-websocket.py <host> <port>")
         print("Example:")
         print("  python3 test-websocket.py localhost 8443")
+        if not WEBSOCKETS_AVAILABLE:
+            print("\nNote: websockets module not available. Install with: pip install websockets")
 
 if __name__ == "__main__":
     main()
