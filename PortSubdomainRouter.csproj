@@ -11,6 +11,9 @@
     <OptimizationPreference>Size</OptimizationPreference>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="9.0.8" />
+  </ItemGroup>
 
 
 
