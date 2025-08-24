@@ -1,0 +1,7 @@
+# Global code owners
+* @Ibmurai
+
+# Specific file ownership (if needed)
+# /src/ @Ibmurai
+# /docs/ @Ibmurai
+# /.github/ @Ibmurai

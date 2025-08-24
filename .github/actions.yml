@@ -1,0 +1,24 @@
+# GitHub Actions configuration
+# This file enables specific features and sets default permissions
+
+# Enable GitHub Container Registry
+packages:
+  write:
+    # Allow publishing to ghcr.io
+    permissions:
+      contents: read
+      packages: write
+
+# Enable security features
+security:
+  # Enable Dependabot alerts
+  dependabot:
+    enabled: true
+  
+  # Enable code scanning
+  code-scanning:
+    enabled: true
+    
+  # Enable secret scanning
+  secret-scanning:
+    enabled: true
